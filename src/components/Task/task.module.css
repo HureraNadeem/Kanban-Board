@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    border-radius: 2px;
+    background-color: #fff;
+    padding: 8px;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    max-width: 225px;
+}
+
+.svg_div {
+    display: flex;
+    align-items: center;
+}
+
+.task_data {
+    width: 100%;
+    margin-left: 8px;
+    height: 40px;
+    
+}
+
+#heading {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0px;
+}
+#content {
+    font-size: 16px;
+    margin: 0px;
+
+}

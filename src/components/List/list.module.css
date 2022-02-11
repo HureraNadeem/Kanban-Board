@@ -1,0 +1,95 @@
+.outer_div {
+  /* border: 1px solid red; */
+  background-color: #fff;
+  width: 250px;
+  min-height: 330px;
+  border-radius: 3px;
+  padding-bottom: 15px;
+}
+.list_header {
+  /* border: 1px solid blue; */
+  display: flex;
+  width: 250px;
+  height: 45px;
+}
+.svg_div {
+  margin: 0px 10px;
+  display: flex;
+  align-items: center;
+}
+.task_name_div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+}
+.task_name_div > p {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.4;
+  padding: 0;
+  margin: 0;
+}
+.icons_div {
+  display: flex;
+  align-items: center;
+}
+.edit_icon {
+  margin-right: 6px;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  height: 24px;
+  width: 24px;
+  justify-content: center;
+  border-radius: 14%;
+  cursor: pointer;
+}
+.delete_icon {
+  background: #e53935;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  height: 24px;
+  width: 24px;
+  justify-content: center;
+  border-radius: 14%;
+  cursor: pointer;
+}
+.list_items_div {
+  min-height: 250px;
+  padding-bottom: 8px;
+}
+.add_task_div {
+  display: flex;
+  justify-content: flex-end;
+  height: fit-content;
+  padding-right: 10px;
+}
+
+.input_tags {
+  border-radius: 8px;
+  height: 35px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 10px 0px;
+  font-variant: tabular-nums;
+  list-style: none;
+  -webkit-font-feature-settings: "tnum";
+  font-feature-settings: "tnum","tnum";
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 11px;
+  color: rgba(0,0,0,.85);
+  font-size: 14px;
+  line-height: 1.5715;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+}
