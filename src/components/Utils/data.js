@@ -20,7 +20,16 @@ const data = [
   {
     id: "list-2",
     title: "InProgress",
-    cards: [],
+    cards: [
+      {
+        id: "Task-1",
+        title: "vim practice",
+      },
+      {
+        id: "Task-2",
+        title: "vdsvdvdvd",
+      },
+    ],
   },
   {
     id: "list-3",
@@ -30,7 +39,12 @@ const data = [
   {
     id: "list-4",
     title: "pending",
-    cards: [],
+    cards: [
+      {
+        id: "Task-1",
+        title: "vim practice",
+      },
+    ],
   },
 ];
 

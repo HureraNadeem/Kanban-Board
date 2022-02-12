@@ -13,11 +13,6 @@ function Task(props) {
                     <p id={styles.content}>{props.title}</p>
                 </div>
             </div>
-
-
-
-
-
         </>
     );
 }

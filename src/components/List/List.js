@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Task from "../Task/Task";
 import styles from "../List/list.module.css";
 import { Modal } from "react-bootstrap";
-
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function List(props) {
-
   // State for the items received as props
   const [listItemValues, setListItemValues] = useState(props.cards);
+
+  // Fetching values in card/items everytimes a props change to handle if a user deletes a category
+  useEffect(() => {
+    setListItemValues(props.cards);
+  }, [props])
 
   // Handeling inputs for the new task
   const [newTaskData, setNewTaskData] = useState({
@@ -25,6 +29,29 @@ function List(props) {
     setListItemValues([...listItemValues, newTaskData]);
     handleTaskModalClose();
   }
+
+  // Handeling REACT-DND
+  const [columns, setColumns] = useState(listItemValues);
+  const onDragEnd = (result, columns, setColumns) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+    if (source.droppableId !== destination.droppableId) {
+      let temp = listItemValues;
+      let temp_ = [];
+      let removed;
+      for (let i = 0; i < temp.length; i++) {
+        if (i !== source.index) {
+          temp_.push(temp[i])
+        }
+        else {
+          removed = temp[i]
+        }
+      }
+      temp = temp_;
+      temp.splice(destination.index, 0, removed);
+      setListItemValues(temp);
+    }
+  };
 
   return (
     <>
@@ -56,23 +83,50 @@ function List(props) {
         </div>
 
         <div className={styles.list_items_div}>
-          {
-            listItemValues.map((value, index) => {
+
+          <DragDropContext onDragEnd={result => onDragEnd(result, columns, setColumns)} >
+
+            {listItemValues.map((value, index) => {
               return (
-                <Task
-                  id={value.id}
-                  title={value.title}
-                />
+                <Droppable droppableId={index.toString()}>
+                  {(provided, snapshot) => {
+                    return (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}>
+                        {
+                          <Draggable key={index} draggableId={index.toString()} index={index}>
+                            {(provided, snapshot) => {
+                              return (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.dragHandleProps}
+                                  {...provided.draggableProps}
+                                >
+                                  <Task
+                                    key={index}
+                                    id={value.id}
+                                    title={value.title}
+                                  />
+                                </div>
+                              )
+                            }}
+                          </Draggable>
+                        }
+                        {provided.placeholder}
+                      </div>
+                    );
+                  }}
+                </Droppable>
               );
-            })
-          }
+            })}
+          </DragDropContext>
 
         </div>
         <div className={styles.add_task_div}>
           <button className="btn btn-success" onClick={handleTaskModalShow} type="button">Click Me!</button>
         </div>
       </div>
-
 
 
       {/* Modal to show up when ADDING A NEW LIST */}

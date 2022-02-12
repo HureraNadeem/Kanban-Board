@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import List from "../List/List";
-import styles from "../Board/board.module.css";
 import data from "../Utils/data";
+import styles from "../Board/board.module.css";
 import { Modal } from "react-bootstrap";
-
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function Board() {
     const [inputDataList, setInputDataList] = useState(data);
-
 
     /*------------ Code for the handeling of Adding of new Lists----------------- */
 
@@ -62,13 +61,45 @@ function Board() {
 
     // Deleting the List
     const deleteMe = (key) => {
-        setInputDataList(inputDataList.filter((value) => {
-            return value["id"] !== key;
-        }));
+        let temp_ = [];
+        for (let i = 0; i < inputDataList.length; i++) {
+            const element = inputDataList[i];
+            if (element["id"] == key) {
+                continue;
+            }
+            else {
+                temp_.push(element);
+            }
+        }
+        setInputDataList(temp_);
     }
+
+    // Handeling REACT-DND
+    const [columns, setColumns] = useState(inputDataList);
+    const onDragEnd = (result, columns, setColumns) => {
+        if (!result.destination) return;
+        const { source, destination } = result;
+        if (source.droppableId !== destination.droppableId) {
+            let temp = inputDataList;
+            let temp_ = [];
+            let removed;
+            for (let i = 0; i < temp.length; i++) {
+                if (i !== source.index) {
+                    temp_.push(temp[i])
+                }
+                else {
+                    removed = temp[i]
+                }
+            }
+            temp = temp_;
+            temp.splice(destination.index, 0, removed);
+            setInputDataList(temp);
+        }
+    };
 
     return (
         <>
+
             <div className={styles.outer_div}>
                 <div className={styles.board_header}>
                     <span style={{ fontWeight: "bold" }}>KANBAN BOARD BY HURERA</span>
@@ -77,23 +108,52 @@ function Board() {
                     </div>
                 </div>
             </div>
-            <div className={styles.lists_container}>
-                {
-                    inputDataList.map((value, index) => {
-                        return (
-                            <List
-                                id={value.id}
-                                name={value.title}
-                                cards={value.cards}
-                                deleteMe={deleteMe}
-                                setListToBeEdited={setListToBeEdited}
-                                handleEditListModalShow={handleEditListModalShow}
-                            />
-                        )
-                    })
-                }
-            </div>
 
+            <div className={styles.lists_container}>
+                <DragDropContext onDragEnd={result => onDragEnd(result, columns, setColumns)} >
+                    {
+                        inputDataList.map((value, index) => {
+                            return (
+                                <>
+                                    <Droppable droppableId={index.toString()} >
+                                        {(provided, snapshot) => {
+                                            return (
+                                                <div
+                                                    {...provided.droppableProps}
+                                                    ref={provided.innerRef}
+                                                >
+                                                    <Draggable key={index} draggableId={index.toString()} index={index}>
+                                                        {(provided, snapshot) => {
+                                                            return (
+                                                                <div
+                                                                    ref={provided.innerRef}
+                                                                    {...provided.dragHandleProps}
+                                                                    {...provided.draggableProps}
+                                                                >
+                                                                    <List
+                                                                        key={index}
+                                                                        id={value.id}
+                                                                        name={value.title}
+                                                                        cards={value.cards}
+                                                                        deleteMe={deleteMe}
+                                                                        setListToBeEdited={setListToBeEdited}
+                                                                        handleEditListModalShow={handleEditListModalShow}
+                                                                    />
+                                                                </div>
+                                                            )
+                                                        }}
+                                                    </Draggable>
+                                                    {provided.placeholder}
+                                                </div>
+                                            )
+                                        }}
+                                    </Droppable>
+                                </>
+                            )
+                        })
+                    }
+                </DragDropContext>
+            </div>
 
             {/* Modal to show up when ADDING A NEW LIST */}
             <Modal show={showAddListModal} onHide={handleListModalClose} centered>
